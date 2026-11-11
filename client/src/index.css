@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+  --color-ink: #0f1c18;
+  --color-mist: #e8f0ec;
+  --color-sage: #2f6b55;
+  --color-sage-bright: #3d8f70;
+  --color-leaf: #a8d5c0;
+  --color-sand: #f3efe6;
+  --color-ember: #c45c26;
+  --color-panel: #ffffff;
+  --color-panel-dark: #14241e;
+  --color-muted: #5c6f67;
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+    overflow-x: clip;
+  }
+
+  body {
+    @apply bg-sand text-ink font-sans min-h-screen;
+    overflow-x: clip;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 10% -10%, rgba(47, 107, 85, 0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 0%, rgba(196, 92, 38, 0.08), transparent),
+      linear-gradient(180deg, #f7f4ee 0%, #ebe6db 100%);
+  }
+
+  html.dark body {
+    @apply bg-ink text-mist;
+    background-image:
+      radial-gradient(ellipse 70% 45% at 15% -5%, rgba(61, 143, 112, 0.18), transparent),
+      radial-gradient(ellipse 50% 35% at 95% 5%, rgba(196, 92, 38, 0.12), transparent),
+      linear-gradient(180deg, #0c1612 0%, #101c18 100%);
+  }
+
+  #root {
+    min-height: 100vh;
+    min-height: 100dvh;
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  .surface {
+    @apply max-w-full min-w-0 bg-white/80 dark:bg-panel-dark/80 backdrop-blur-md border border-black/5 dark:border-white/10 rounded-2xl shadow-sm;
+  }
+
+  .page-title {
+    @apply font-display text-2xl sm:text-3xl;
+  }
+
+  .page-lead {
+    @apply text-muted text-sm mt-1;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply bg-sage text-white hover:bg-sage-bright;
+  }
+
+  .btn-secondary {
+    @apply bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 text-ink dark:text-mist;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-black/5 dark:hover:bg-white/10;
+  }
+
+  .btn-danger {
+    @apply bg-ember/90 text-white hover:bg-ember;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-black/20
+      px-3.5 py-2.5 text-sm outline-none transition
+      focus:border-sage focus:ring-2 focus:ring-sage/20
+      placeholder:text-muted/70;
+  }
+
+  .label {
+    @apply block text-xs font-semibold uppercase tracking-wide text-muted mb-1.5;
+  }
+
+  .field {
+    @apply space-y-1.5;
+  }
+
+  .table-scroll {
+    @apply w-full max-w-full overflow-x-auto;
+  }
+
+  .data-table {
+    @apply w-full text-sm;
+  }
+
+  .nav-scroll {
+    scrollbar-width: none;
+  }
+
+  .nav-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  [contenteditable] b,
+  [contenteditable] strong {
+    font-weight: 700;
+  }
+
+  [contenteditable] i,
+  [contenteditable] em {
+    font-style: italic;
+  }
+}
