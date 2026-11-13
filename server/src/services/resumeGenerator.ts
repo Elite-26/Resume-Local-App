@@ -6,7 +6,6 @@ import {
   parseDynamicExperiences,
   parseResumeContent,
   sanitizePathSegment,
-  formatDateFolder,
 } from './resumeParser.js';
 import {
   fillDocxTemplate,
@@ -415,9 +414,8 @@ export async function generateResumeFiles(
     throw new Error('Profile has no resume format selected');
   }
 
-  const dateFolder = formatDateFolder();
   const folderName = `${input.uniqueNumber}.${sanitizePathSegment(input.company)}-${sanitizePathSegment(input.role)}`;
-  const outputDir = path.resolve(input.outputBasePath, dateFolder, folderName);
+  const outputDir = path.resolve(input.outputBasePath, folderName);
   ensureDir(outputDir);
 
   const resumeFileName = sanitizePathSegment(input.profile.fullName) || 'resume';

@@ -5,14 +5,12 @@ import {
 
 /** Session keys for the profile → links → select → resume flow. */
 
-export const PARSED_JOB_LINKS_KEY = 'parsedJobLinks';
-export const SELECTED_JOB_LINK_KEY = 'selectedJobLink';
-export const GENERATE_SUCCESS_KEY = 'generateSuccess';
-export const JOB_SELECTION_RESET_AT_KEY = 'jobSelectionResetAt';
-export const IMPORTED_APPLICATIONS_KEY = 'importedApplications';
-export const SELECTED_APPLICATION_KEY = 'selectedApplication';
-
-export type { ImportedApplication };
+const PARSED_JOB_LINKS_KEY = 'parsedJobLinks';
+const SELECTED_JOB_LINK_KEY = 'selectedJobLink';
+const GENERATE_SUCCESS_KEY = 'generateSuccess';
+const JOB_SELECTION_RESET_AT_KEY = 'jobSelectionResetAt';
+const IMPORTED_APPLICATIONS_KEY = 'importedApplications';
+const SELECTED_APPLICATION_KEY = 'selectedApplication';
 
 export function getParsedJobLinks(): string[] {
   try {

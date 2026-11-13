@@ -471,7 +471,7 @@ export function AdminProfilesPage() {
                 placeholder="C:\"
               />
               <p className="text-xs text-muted mt-1">
-                Results land in <code>yy-mm-dd/[n].[company]-[role]/</code>
+                Results land in <code>[n].[company]-[role]/</code>
               </p>
             </div>
 

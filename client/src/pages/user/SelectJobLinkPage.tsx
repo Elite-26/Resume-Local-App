@@ -20,10 +20,6 @@ import {
   takeGenerateSuccess,
 } from '../../lib/jobFlow';
 
-function normalizeLink(link: string) {
-  return normalizeJobLink(link);
-}
-
 function jobLinkHref(link: string) {
   const trimmed = link.trim();
   if (!trimmed) return '';
@@ -37,7 +33,7 @@ function latestAppliedBuilds(builds: ResumeBuild[]) {
   for (const build of builds) {
     if (!build.job_link) continue;
     if (resetAt && !(new Date(build.created_at) > resetAt)) continue;
-    const key = normalizeLink(build.job_link);
+    const key = normalizeJobLink(build.job_link);
     const current = byLink.get(key);
     if (!current || new Date(build.created_at) > new Date(current.created_at)) {
       byLink.set(key, build);
@@ -69,7 +65,7 @@ export function SelectJobLinkPage() {
   const appliedByLink = useMemo(() => latestAppliedBuilds(builds), [builds]);
 
   const availableCount = useMemo(
-    () => links.filter((link) => !appliedByLink.has(normalizeLink(link))).length,
+    () => links.filter((link) => !appliedByLink.has(normalizeJobLink(link))).length,
     [links, appliedByLink]
   );
 
@@ -77,7 +73,7 @@ export function SelectJobLinkPage() {
     const seen = new Set<string>();
     const jobs: ImportedApplication[] = [];
     for (const link of links) {
-      const key = normalizeLink(link);
+      const key = normalizeJobLink(link);
       if (!appliedByLink.has(key) || seen.has(key)) continue;
       seen.add(key);
       jobs.push(applicationForLink(link, appliedByLink.get(key)));
@@ -159,7 +155,7 @@ export function SelectJobLinkPage() {
   }
 
   function onExportOne(link: string) {
-    const job = applicationForLink(link, appliedByLink.get(normalizeLink(link)));
+    const job = applicationForLink(link, appliedByLink.get(normalizeJobLink(link)));
     setError('');
     downloadApplicationsFile([job], applicationExportFilename(job));
   }
@@ -169,7 +165,7 @@ export function SelectJobLinkPage() {
       setError('Select a job link to continue.');
       return;
     }
-    if (appliedByLink.has(normalizeLink(selected))) {
+    if (appliedByLink.has(normalizeJobLink(selected))) {
       setError('That job was already applied. Choose another link.');
       return;
     }
@@ -237,7 +233,7 @@ export function SelectJobLinkPage() {
             </div>
             <div className="space-y-2">
             {links.map((link, idx) => {
-              const appliedBuild = appliedByLink.get(normalizeLink(link));
+              const appliedBuild = appliedByLink.get(normalizeJobLink(link));
               const applied = Boolean(appliedBuild);
               const imported = getImportedApplication(link);
               const company = (appliedBuild?.company || imported?.company || '').trim();

@@ -24,7 +24,7 @@ cp server/.env.example server/.env
 
 Optional Google Sign-In:
 
-- Set `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` in `server/.env`
+- Set `GOOGLE_CLIENT_ID` in `server/.env`
 - Set `VITE_GOOGLE_CLIENT_ID` in `client/.env` (same client id)
 
 ### 3. Install & migrate
@@ -66,7 +66,7 @@ The **first registered account** becomes **admin**. Later accounts are users.
 3. Fill JD (company, role, description); copy prompt & JD; similar-company warnings  
 4. Paste resume content (`Professional Summary`, `Skill Set`, `TITLE: [role]`) → Generate  
 
-Outputs under `{output_path}/yy-mm-dd/{n}.{company}-{role}/`:
+Outputs under `{output_path}/{n}.{company}-{role}/`:
 
 - PDF resume  
 - DOC/DOCX resume  

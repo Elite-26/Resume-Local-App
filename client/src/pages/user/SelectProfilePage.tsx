@@ -53,53 +53,60 @@ export function SelectProfilePage() {
         </div>
       ) : (
         <div className="space-y-3">
+          <div className="hidden xl:grid xl:grid-cols-[1.25rem_minmax(0,1.15fr)_minmax(0,1.35fr)_minmax(0,0.95fr)_13rem] gap-x-6 px-5 border border-transparent text-[11px] font-semibold uppercase tracking-wide text-muted">
+            <span />
+            <span>Profile</span>
+            <span>Contact</span>
+            <span>Resume format</span>
+            <span className="grid grid-cols-[9rem_3rem] gap-4">
+              <span>Status</span>
+              <span>Apply</span>
+            </span>
+          </div>
           {profiles.map((p) => (
             <label
               key={p.id}
-              className={`surface px-4 sm:px-5 py-4 flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-3 sm:gap-x-6 sm:gap-y-3 cursor-pointer transition ${
+              className={`surface px-4 sm:px-5 py-4 grid grid-cols-[1.25rem_minmax(0,1fr)] md:grid-cols-[1.25rem_minmax(0,1fr)_minmax(0,1fr)] xl:grid-cols-[1.25rem_minmax(0,1.15fr)_minmax(0,1.35fr)_minmax(0,0.95fr)_13rem] gap-x-3 gap-y-3 md:gap-x-6 xl:items-center cursor-pointer transition ${
                 selected === p.id ? 'ring-2 ring-sage/40 bg-sage/5' : ''
               }`}
             >
-              <div className="flex items-start gap-3 w-full sm:w-auto min-w-0">
-                <input
-                  type="radio"
-                  name="profile"
-                  className="shrink-0 size-4 accent-[var(--color-sage)] mt-1"
-                  checked={selected === p.id}
-                  onChange={() => setSelected(p.id)}
-                />
-                <div className="min-w-0">
-                  <p className="font-medium truncate">{p.full_name}</p>
-                  <p className="text-sm text-muted truncate">
-                    {p.role_title || 'No role set'}
-                  </p>
-                </div>
+              <input
+                type="radio"
+                name="profile"
+                className="col-start-1 row-start-1 row-span-1 md:row-span-2 xl:row-span-1 self-start md:self-center mt-1 md:mt-0 size-4 accent-[var(--color-sage)]"
+                checked={selected === p.id}
+                onChange={() => setSelected(p.id)}
+              />
+              <div className="col-start-2 row-start-1 min-w-0">
+                <p className="font-medium truncate">{p.full_name || '—'}</p>
+                <p className="text-sm text-muted truncate">{p.role_title || 'No role set'}</p>
               </div>
 
-              {p.contactLine && (
-                <div className="text-xs text-muted break-words min-w-0 sm:max-w-xs pl-7 sm:pl-0">
-                  {p.contactLine}
-                </div>
-              )}
-
-              <div className="min-w-0 pl-7 sm:pl-0">
-                <p className="label !mb-1">Resume format</p>
-                <p className="text-sm truncate">{p.resumeFormatName || ''}</p>
+              <div className="col-start-2 row-start-2 md:col-start-3 md:row-start-1 xl:col-start-3 xl:row-start-1 min-w-0">
+                <p className="label !mb-1 xl:hidden">Contact</p>
+                <p className="text-sm text-muted truncate" title={p.contactLine || undefined}>
+                  {p.contactLine || '—'}
+                </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 pl-7 sm:pl-0 sm:ml-auto">
+              <div className="col-start-2 row-start-3 md:col-start-2 md:row-start-2 xl:col-start-4 xl:row-start-1 min-w-0">
+                <p className="label !mb-1 xl:hidden">Resume format</p>
+                <p className="text-sm truncate" title={p.resumeFormatName || undefined}>
+                  {p.resumeFormatName || '—'}
+                </p>
+              </div>
+
+              <div className="col-start-2 row-start-4 md:col-start-3 md:row-start-2 xl:col-start-5 xl:row-start-1 grid grid-cols-[9rem_3rem] items-center gap-4">
                 <span
-                  className={`inline-flex rounded-md px-2 py-0.5 text-xs font-medium whitespace-nowrap ${
-                    p.promptReady
-                      ? 'bg-sage/15 text-sage'
-                      : 'bg-ember/15 text-ember'
+                  className={`inline-flex w-full justify-center rounded-md px-2 py-0.5 text-xs font-medium whitespace-nowrap ${
+                    p.promptReady ? 'bg-sage/15 text-sage' : 'bg-ember/15 text-ember'
                   }`}
                 >
                   {p.promptReady ? 'Prompt ready' : 'Prompt not ready'}
                 </span>
                 <div>
-                  <p className="label !mb-1">Apply</p>
-                  <p className="text-sm font-medium">{p.applicationCount ?? 0}</p>
+                  <p className="label !mb-1 xl:hidden">Apply</p>
+                  <p className="text-sm font-medium tabular-nums">{p.applicationCount ?? 0}</p>
                 </div>
               </div>
             </label>

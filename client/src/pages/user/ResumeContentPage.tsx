@@ -223,11 +223,15 @@ CERTIFICATION
       )}
 
       {similar.length > 0 && (
-        <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 px-3 py-2 text-sm shrink-0">
-          <p className="font-medium text-amber-800 dark:text-amber-200">
+        <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 px-3 py-2 text-sm shrink-0 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <p className="font-medium text-amber-800 dark:text-amber-200 shrink-0">
             Similar companies already applied:
           </p>
-          <p className="mt-1">{similar.join(', ')}</p>
+          <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
+            {similar.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
         </div>
       )}
       {alreadyApplied && (
@@ -295,13 +299,13 @@ CERTIFICATION
           <div className="flex flex-col-reverse sm:flex-row sm:items-start sm:justify-between gap-2 shrink-0">
             <div className="min-w-0">
               <h2 className="font-display text-lg sm:text-xl">Resume content</h2>
-              {resumeStructure === 'dynamic' && (
+              {/* {resumeStructure === 'dynamic' && (
                 <p className="text-xs text-muted mt-1">
                   Header, summary, skills, education, and certification match structure 1. For
                   experience, the latest company includes projects; earlier companies are bullets
                   only. Company, role, and location come from the content.
                 </p>
-              )}
+              )} */}
             </div>
             <button
               type="button"

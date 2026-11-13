@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
-import { fileURLToPath } from 'url';
 import { config } from './config/index.js';
 import authRoutes from './routes/auth.js';
 import profileRoutes from './routes/profile.js';
@@ -12,13 +11,10 @@ import buildRoutes from './routes/builds.js';
 import adminRoutes from './routes/admin.js';
 import { getTemplatesDir, syncProjectTemplates } from './services/templateSync.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
-const uploadsDir = path.resolve(__dirname, '../uploads');
 const templatesDir = getTemplatesDir();
 const outputsDir = path.resolve(config.defaultOutputPath);
-fs.mkdirSync(uploadsDir, { recursive: true });
 fs.mkdirSync(templatesDir, { recursive: true });
 try {
   fs.mkdirSync(outputsDir, { recursive: true });
@@ -33,11 +29,9 @@ app.use(
       'http://localhost:5173',
       'http://127.0.0.1:5173',
     ],
-    credentials: true,
   })
 );
 app.use(express.json({ limit: '5mb' }));
-app.use('/uploads', express.static(uploadsDir));
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true });
