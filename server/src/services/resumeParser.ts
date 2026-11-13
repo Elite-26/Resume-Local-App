@@ -173,8 +173,8 @@ export type DynamicProject = {
 
 /**
  * Experience parsed from structure 2 resume content.
- * The first TITLE block is the latest company and may include PROJECT groups.
- * Later TITLE blocks are bullets only.
+ * Any TITLE block may include PROJECT groups. Those use the same project layout
+ * as the latest company. Blocks without projects stay bullets only.
  */
 export type DynamicExperience = {
   title: string;
@@ -215,10 +215,9 @@ function joinMarkupLines(lines: string[]): string {
  * PROJECT_END and EXPERIENCE_END are markers only.
  * Project names keep the text after PROJECT:, and drop wrapping braces.
  */
-function parseDynamicExperience(exp: ParsedExperience, latest: boolean): DynamicExperience {
+function parseDynamicExperience(exp: ParsedExperience): DynamicExperience {
   const lead: string[] = [];
   const trail: string[] = [];
-  const flat: string[] = [];
   const projects: { title: string; lines: string[] }[] = [];
   let companyName = '';
   let location = '';
@@ -260,14 +259,9 @@ function parseDynamicExperience(exp: ParsedExperience, latest: boolean): Dynamic
       const title = unwrapFieldValue(project[1]);
       projects.push({ title, lines: [] });
       phase = 'project';
-      if (!latest && title) flat.push(title);
       continue;
     }
 
-    if (!latest) {
-      flat.push(line);
-      continue;
-    }
     if (phase === 'project' && projects.length) {
       projects[projects.length - 1].lines.push(line);
     } else if (phase === 'trail') {
@@ -282,15 +276,13 @@ function parseDynamicExperience(exp: ParsedExperience, latest: boolean): Dynamic
     details: joinMarkupLines(project.lines),
   }));
 
-  const flatDetails = latest
-    ? joinMarkupLines([
-        ...lead,
-        ...parsedProjects.flatMap((project) =>
-          [project.title, ...project.details.split('\n')].filter(Boolean)
-        ),
-        ...trail,
-      ])
-    : joinMarkupLines(flat);
+  const flatDetails = joinMarkupLines([
+    ...lead,
+    ...parsedProjects.flatMap((project) =>
+      [project.title, ...project.details.split('\n')].filter(Boolean)
+    ),
+    ...trail,
+  ]);
 
   return {
     title: unwrapFieldValue(exp.role),
@@ -306,9 +298,7 @@ function parseDynamicExperience(exp: ParsedExperience, latest: boolean): Dynamic
 
 /** Parse structure 2 experiences. The first TITLE block is the latest company. */
 export function parseDynamicExperiences(raw: string): DynamicExperience[] {
-  return parseResumeContent(raw).experiences.map((exp, index) =>
-    parseDynamicExperience(exp, index === 0)
-  );
+  return parseResumeContent(raw).experiences.map((exp) => parseDynamicExperience(exp));
 }
 
 function findSectionRange(

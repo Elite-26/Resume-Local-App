@@ -308,7 +308,10 @@ function writePdfFallback(filePath: string, data: TemplateFillData): Promise<voi
         if (titleLine) doc.font('Helvetica').fontSize(10).text(titleLine);
 
         const chunks: { markup: string; project?: boolean }[] = [];
-        if (index === 0) {
+        const hasProjects = exp.projects.some(
+          (project) => project.title.trim() || project.details.trim()
+        );
+        if (index === 0 || hasProjects) {
           if (exp.leadDetails.trim()) chunks.push({ markup: exp.leadDetails });
           for (const project of exp.projects) {
             if (project.title.trim()) chunks.push({ markup: project.title, project: true });

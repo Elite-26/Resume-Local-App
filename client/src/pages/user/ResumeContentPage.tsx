@@ -59,6 +59,9 @@ TITLE: Title at earlier company
 Company: Company name
 Location: City, ST
 • bullet
+PROJECT: Project name
+• bullet
+PROJECT_END
 CERTIFICATION
 …`
       : `PROFESSIONAL SUMMARY

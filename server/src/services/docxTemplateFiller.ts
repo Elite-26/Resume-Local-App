@@ -35,7 +35,7 @@ export type TemplateExperienceFill = {
   companyBullet: string;
 };
 
-/** Structure 2 experience. Latest company uses projects; earlier ones use details only. */
+/** Structure 2 experience. Companies with projects use the latest-company layout. */
 export type DynamicExperienceFill = {
   companyName: string;
   timeline: string;
@@ -98,12 +98,24 @@ function continuesPlaceholder(left: string, right: string): boolean {
 
 /**
  * Merge split w:t runs so {{Placeholders}} that Word split are reconstituted.
- * A failed pair must not skip the next run, or a token broken into 3+ runs
- * ({{COMPANY_ | L | OCATION | }}) is never rebuilt.
+ * Bookmarks and proof marks between runs are skipped. A failed pair must not
+ * skip the next run, or a token broken into 3+ runs is never rebuilt.
  */
 function mergeSplitPlaceholders(xml: string): string {
-  const pair =
-    /(<w:t[^>]*>)([^<]*)(<\/w:t>)(\s*<\/w:r>\s*<w:r[^>]*>\s*(?:<w:rPr>(?:(?!<\/w:rPr>)[\s\S])*<\/w:rPr>\s*)?<w:t[^>]*>)([^<]*)(<\/w:t>)/g;
+  const between =
+    '(?:\\s|<w:bookmarkStart\\b[^>]*/>|<w:bookmarkEnd\\b[^>]*/>|<w:proofErr\\b[^>]*/>|<w:lastRenderedPageBreak\\b[^>]*/>)*';
+  const pair = new RegExp(
+    '(<w:t[^>]*>)([^<]*)(<\\/w:t>)(' +
+      between +
+      '<\\/w:r>' +
+      between +
+      '<w:r[^>]*>' +
+      between +
+      '(?:<w:rPr>(?:(?!<\\/w:rPr>)[\\s\\S])*?<\\/w:rPr>' +
+      between +
+      ')?<w:t[^>]*>)([^<]*)(<\\/w:t>)',
+    'g'
+  );
   let result = xml;
   let changed = true;
   while (changed) {
@@ -581,8 +593,8 @@ function hasDynamicExperienceTokens(xml: string): boolean {
 }
 
 /**
- * Structure 2: duplicate the latest-company block once, then the simpler block
- * once per earlier company.
+ * Structure 2: companies that include projects use the latest-company block.
+ * Companies without projects use the simpler bullet block.
  */
 function expandAndFillDynamicExperiences(
   xml: string,
@@ -622,10 +634,16 @@ function expandAndFillDynamicExperiences(
   }
 
   const filled = experiences.map((exp, index) => {
+    const hasProjects = exp.projects.some(
+      (project) => project.title.trim() || project.details.trim()
+    );
     const block = stripBookmarks(
-      index === 0 && useProjects
+      useProjects && (index === 0 || hasProjects)
         ? fillLatestExperience(structureA, exp)
-        : fillSimpleExperience(index === 0 ? simpleFromA : structureB.length ? structureB : simpleFromA, exp)
+        : fillSimpleExperience(
+            index === 0 ? simpleFromA : structureB.length ? structureB : simpleFromA,
+            exp
+          )
     );
     return block;
   });
